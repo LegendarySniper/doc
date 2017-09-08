@@ -599,3 +599,77 @@ mv composer.phar /usr/local/bin/composer
 composer config -g repo.packagist composer https://packagist.phpcomposer.com  (中国镜像)
 ```
 
+## 安装redis
+
+安装所需要的包
+
+```bash
+yum install -y tcl
+```
+
+解压安装redis
+
+```bash
+cd /usr/local/src
+tar zxf redis-3.2.9.tar.gz
+cd redis-3.2.9
+make PREFIX=/usr/local/soft/redis install
+```
+
+启动脚本
+
+```bash
+cp /usr/local/src/redis-3.2.9/utils/redis_init_script /etc/init.d/redis
+```
+
+修改启动脚本
+
+```bash
+vi /etc/init.d/redis
+//todo
+chmod +x /etc/init.d/redis
+chkconfig redis on
+```
+
+复制配置文件
+
+```bash
+mkdir -p /usr/local/soft/redis/conf
+cp /usr/local/src/redis-3.2.9/redis.conf /usr/local/soft/redis/conf/6379.conf
+```
+
+修改配置文件后台运行
+
+```bash
+vi /usr/local/soft/redis/conf/6379.conf
+daemonize yes
+```
+
+将命令添加到环境变量
+
+```bash
+vi /etc/profile
+export PATH=/usr/local/soft/php56/bin:/usr/local/soft/mysql/bin:/usr/local/
+soft/redis/bin:$PATH
+source /etc/profile
+```
+
+启动
+
+```bash
+service redis start
+redis-cli > ping
+```
+
+查看连接数
+
+```bash
+redis-cli --stat
+```
+
+
+
+
+
+
+
