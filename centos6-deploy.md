@@ -6,7 +6,7 @@
 - 软件目录 /usr/local/soft
 - 软件源码包目录 /usr/local/src
 - 数据目录 /data
-- 预安装软件 Nginx MySQL php Redis Memcache Sphinx Git Svn Node.js
+- 预安装软件 Nginx MySQL php Redis Memcache Sphinx Git Svn Node.js  Java ElasticSearch
 
 ## 初始
 
@@ -31,7 +31,7 @@ alias src="cd /usr/local/src"
 alias data="cd /data"
 ```
 
-修改主机名为 dev.com  👌
+修改主机名为 dev.com  
 
 ```bash
 sudo vim /etc/sysconfig/hostname
@@ -571,24 +571,34 @@ chkconfig --add php-fpm
 chkconfig php-fpm on
 ```
 
-php扩展安装 //todo
+php扩展安装(redis memcache swoole)
 
 ```
-wget https://pecl.php.net/get/redis-3.0.0.tgz
-tar zxvf redis-3.0.0.tgz
-cd redis-3.0.0/
+wget http://pecl.php.net/get/redis-3.1.3.tgz
+tar zxvf redis-3.1.3.tgz
+cd redis-3.1.3/
 /usr/local/soft/php56/bin/phpize
 ./configure --with-php-config=/usr/local/soft/php56/bin/php-config
 make && make install
 ```
 
-添加模块  vi /usr/local/webserver/php/etc/php.ini
+```bash
+wget http://pecl.php.net/get/memcache-3.0.8.tgz
+tar zxvf memcache-3.0.8.tgz
+cd memcache-3.0.8.tgz
+/usr/local/soft/php56/bin/phpize
+./configure --enable-memcache --with-php-config=/usr/local/soft/php56/bin/php-config --with-zlib-dir
+make && make install
+```
+
+添加模块  vi /usr/local/soft/php56/etc/php.ini
 
 ```
 ; extension_dir = "ext"
 ; 在该行下添加如下配置：
 extension_dir = "/usr/local/soft/php56/lib/php/extensions/no-debug-non-zts-20131226/"
 extension=redis.so
+extension=memcache.so
 ```
 
 安装composer
@@ -599,7 +609,7 @@ mv composer.phar /usr/local/bin/composer
 composer config -g repo.packagist composer https://packagist.phpcomposer.com  (中国镜像)
 ```
 
-## 安装redis
+## 安装Redis
 
 安装所需要的包
 
@@ -661,15 +671,61 @@ service redis start
 redis-cli > ping
 ```
 
-查看连接数
+带密码连接
+
+```bash
+redis-cli -h 127.0.0.1 -p 6379 -a 111111
+```
+
+原生监控命令
+
+当前连接的客户端数和连接数
 
 ```bash
 redis-cli --stat
 ```
 
+查看当前的键值情况
 
+```bash
+redis-cli --scan
+```
 
+打印出所有sever接收到的命令以及其对应的客户端地址
 
+```bash
+redis-cli monitor
+```
 
+## 安装Memcached
 
+安装依赖
+
+```bash
+yum install -y libevent-devel
+```
+
+解压安装memcached
+
+```bash
+cd /usr/local/src/
+wget http://memcached.org/files/memcached-1.5.1.tar.gz
+tar zxvf memcached-1.5.1
+cd memcached-1.5.1
+./configure --prefix=/usr/local/soft/memcached
+make && make install
+```
+
+启动
+
+```bash
+memcached -d -p 11211 -m 64 -u xxx
+```
+
+连接
+
+```bash
+telnet 127.0.0.1 11211
+stats 查看状态
+```
 
