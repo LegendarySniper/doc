@@ -729,3 +729,24 @@ telnet 127.0.0.1 11211
 stats 查看状态
 ```
 
+## 安装Node.Js
+
+下载安装
+
+```bash
+cd /usr/local/src
+wget https://npm.taobao.org/mirrors/node/v8.4.0/node-v8.4.0-linux-x64.tar.xz
+mkdir -p /usr/local/soft/nodejs
+tar Jxvf node-v8.4.0-linux-x64.tar.xz -C /usr/local/soft/nodejs
+```
+
+添加到环境变量
+
+```bash
+vi /etc/profile
+export NODE_HOME=/usr/local/soft/nodejs
+export PATH=/usr/local/soft/php56/bin:/usr/local/soft/mysql/bin:$NODE_HOME/bin:
+/usr/local/soft/redis/bin:$PATH                        
+export NODE_PATH=$NODE_HOME/lib/node_modules:$PATH
+```
+
