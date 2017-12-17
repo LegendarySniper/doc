@@ -34,7 +34,7 @@ alias data="cd /data"
 修改主机名为 dev.com  
 
 ```bash
-sudo vim /etc/sysconfig/hostname
+sudo vim /etc/sysconfig/network
 ```
 
 DNS配置
@@ -744,9 +744,70 @@ tar Jxvf node-v8.4.0-linux-x64.tar.xz -C /usr/local/soft/nodejs
 
 ```bash
 vi /etc/profile
+```
+
+```bash
 export NODE_HOME=/usr/local/soft/nodejs
 export PATH=/usr/local/soft/php56/bin:/usr/local/soft/mysql/bin:$NODE_HOME/bin:
 /usr/local/soft/redis/bin:$PATH                        
 export NODE_PATH=$NODE_HOME/lib/node_modules:$PATH
 ```
+
+```bash
+source /etc/profile
+```
+
+## 安装java
+
+下载安装
+
+```bash
+cd /usr/local/src
+wget http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/jdk-8u144-linux-x64.tar.gz
+tar zxvf jdk-8u144-linux-x64.tar.gz -C /usr/local/soft/java
+```
+
+添加到环境变量
+
+```bash
+vi /etc/profile
+```
+
+//TODO
+
+## 安装Sphinx
+
+下载安装
+
+```bash
+cd /usr/local/src
+tar zxvf coreseek-4.1-beta.tar.gz
+cd coreseek-4.1-beta
+```
+
+安装mmseg
+
+```bash
+cd mmseg-3.2.14
+./bootstrap  
+./configure --prefix=/usr/local/mmseg3
+make && make install
+```
+
+安装coreseek
+
+```bash
+cd ../csft-4.1
+sh buildconf.sh
+
+./configure --prefix=/usr/local/soft/sphinx  \
+--without-unixodbc \
+--with-mmseg \
+--with-mmseg-includes=/usr/local/mmseg3/include/mmseg/ \
+--with-mmseg-libs=/usr/local/mmseg3/lib/ \
+--with-mysql
+
+make && make install 
+```
+
 
