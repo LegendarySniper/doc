@@ -573,6 +573,8 @@ chkconfig php-fpm on
 
 php扩展安装(redis memcache swoole)
 
+redis扩展
+
 ```
 wget http://pecl.php.net/get/redis-3.1.3.tgz
 tar zxvf redis-3.1.3.tgz
@@ -581,6 +583,8 @@ cd redis-3.1.3/
 ./configure --with-php-config=/usr/local/soft/php56/bin/php-config
 make && make install
 ```
+
+memcache扩展
 
 ```bash
 wget http://pecl.php.net/get/memcache-3.0.8.tgz
@@ -591,6 +595,18 @@ cd memcache-3.0.8.tgz
 make && make install
 ```
 
+swoole扩展
+
+```bash
+wget https://github.com/swoole/swoole-src/archive/v2.0.10-stable.tar.gz -O
+tar zxf swoole-2.0.10.tar.gz
+cd swoole-src-2.0.10-stable/
+/usr/local/soft/php56/bin/phpize
+./configure --with-php-config=/usr/local/soft/php56/bin/php-config
+make
+make install
+```
+
 添加模块  vi /usr/local/soft/php56/etc/php.ini
 
 ```
@@ -599,6 +615,7 @@ make && make install
 extension_dir = "/usr/local/soft/php56/lib/php/extensions/no-debug-non-zts-20131226/"
 extension=redis.so
 extension=memcache.so
+extension=swoole.so
 ```
 
 安装composer
