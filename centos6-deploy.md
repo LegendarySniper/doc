@@ -827,4 +827,122 @@ sh buildconf.sh
 make && make install 
 ```
 
+## 安装PHP7.2
+
+下载安装
+
+```bash
+wget php-7.2.0.tar.gz
+```
+
+安装PHP7.2
+
+```bash
+./configure --prefix=/usr/local/soft/php7 \
+--with-config-file-path=/usr/local/soft/php7/etc \
+--with-libdir=lib64 \
+--enable-fpm \
+--with-fpm-user=www \
+--with-fpm-group=www \
+--enable-mysqlnd \
+--with-mysqli=mysqlnd \
+--enable-pdo \
+--with-pdo-mysql=mysqlnd \
+--enable-mbregex \
+--with-zlib-dir \
+--with-png-dir \
+--with-jpeg-dir \
+--with-freetype-dir \
+--with-mhash \
+--with-mcrypt \
+--with-readline \
+--enable-bcmath \
+--with-bz2 \
+--enable-calendar \
+--with-curl \
+--enable-exif \
+--enable-ftp \
+--with-gd \
+--enable-gd-jis-conv \
+--enable-gd-native-ttf \
+--with-gettext \
+--with-gmp \
+--with-iconv \
+--enable-intl \
+--with-ldap \
+--enable-mbstring \
+--enable-session \
+--enable-shmop \
+--enable-soap \
+--enable-sockets \
+--enable-sysvmsg \
+--enable-sysvsem \
+--enable-sysvshm \
+--enable-opcache \
+--with-openssl \
+--enable-pcntl \
+--with-zlib \
+--enable-zip \
+--with-xmlrpc \
+--enable-xml \
+--disable-debug \
+--disable-phpdbg \
+--disable-ipv6
+```
+
+编译安装
+
+```bash
+make ZEND_EXTRA_LIBS='-liconv' -j `nproc` 
+make install
+```
+
+php.ini 和 php-fpm.conf
+
+```bash
+cp php.ini-production /usr/local/soft/php7/etc/php.ini
+cp /usr/local/soft/php7/etc/php-fpm.conf.default /usr/local/soft/php7/etc/php-fpm.conf
+cp /usr/local/soft/php7/etc/php-fpm.d/www.conf.default /usr/local/soft/php7/etc/php-fpm.d/www.conf
+```
+
+php-fpm.conf 配置 vi /usr/local/soft/php7/etc/php-fpm.conf：
+
+```bash
+[global]
+pid = run/php-fpm.pid
+error_log = log/php-fpm.log
+emergency_restart_threshold = 60
+emergency_restart_interval = 60
+process_control_timeout = 5s
+daemonize = yes
+rlimit_files = 65535
+```
+
+www.conf 配置 vi /usr/local/soft/php7/etc/php-fpm.d/www.conf：
+
+```bash
+[www]
+user = www
+group = www
+pm = static
+pm.max_children = 384
+pm.start_servers = 20
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
+pm.process_idle_timeout = 10s
+pm.max_requests = 51200
+request_terminate_timeout = 0
+```
+
+php-fpm 启动脚本：
+
+```bash
+cp sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm7
+chmod +x /etc/init.d/php-fpm7
+chkconfig --add php-fpm7
+chkconfig php-fpm7 on
+```
+
+
+
 
